@@ -18,7 +18,8 @@ const corsOptions = {
       'http://localhost:5173',  // Vite default
       'http://localhost:4173',  // Vite preview
       'http://localhost:8080',  // Alternative dev port
-      'https://ai-meeting-summarizer-frontend-olive.vercel.app', // Production frontend
+      'https://ai-meeting-summarizer-frontend-olive.vercel.app', // Old production frontend
+      'https://ai-meeting-summarizer-frontend-4km58v4ja-krishis-projects.vercel.app', // New production frontend
       process.env.FRONTEND_URL   // Additional production frontend URL
     ].filter(Boolean); // Remove undefined values
     
