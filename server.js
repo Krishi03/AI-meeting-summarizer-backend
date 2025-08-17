@@ -18,13 +18,15 @@ const corsOptions = {
       'http://localhost:5173',  // Vite default
       'http://localhost:4173',  // Vite preview
       'http://localhost:8080',  // Alternative dev port
-      process.env.FRONTEND_URL   // Production frontend URL
+      'https://ai-meeting-summarizer-frontend-olive.vercel.app', // Production frontend
+      process.env.FRONTEND_URL   // Additional production frontend URL
     ].filter(Boolean); // Remove undefined values
     
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.log('🚫 CORS blocked origin:', origin);
+      console.log('💡 Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
