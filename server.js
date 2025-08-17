@@ -38,10 +38,70 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+console.log('🔍 MongoDB Connection Debug:');
+console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+if (process.env.MONGODB_URI) {
+  // Mask the password for security
+  const maskedUri = process.env.MONGODB_URI.replace(/:([^@]+)@/, ':****@');
+  console.log('Connection string (masked):', maskedUri);
+  
+  // Check for common issues
+  if (process.env.MONGODB_URI.includes(':27017')) {
+    console.log('❌ WARNING: Port number detected in mongodb+srv URI');
+    console.log('mongodb+srv URIs should NOT have port numbers');
+  }
+  if (process.env.MONGODB_URI.startsWith('mongodb://')) {
+    console.log('❌ WARNING: Using mongodb:// instead of mongodb+srv://');
+    console.log('For Atlas clusters, use mongodb+srv://');
+  }
+}
+
+try {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // Add TLS/SSL options to fix compatibility issues
+    ssl: true,
+    sslValidate: true,
+    // Force TLS 1.2 for better compatibility
+    tls: true,
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
+    // Connection timeout and retry options
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 30000,
+    // Retry options
+    retryWrites: true,
+    retryReads: true,
+    // Buffer settings
+    bufferMaxEntries: 0,
+    bufferCommands: false,
+    // Additional options for Atlas
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    maxIdleTimeMS: 30000,
+  });
+  
+  mongoose.connection.on('connected', () => {
+    console.log('✅ MongoDB connected successfully');
+  });
+  
+  mongoose.connection.on('error', (err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+    if (err.message.includes('SSL') || err.message.includes('TLS')) {
+      console.log('🔒 SSL/TLS Error detected. This might be a protocol compatibility issue.');
+      console.log('💡 Try updating your MongoDB Atlas cluster or check TLS settings.');
+    }
+  });
+  
+  mongoose.connection.on('disconnected', () => {
+    console.log('⚠️ MongoDB disconnected');
+  });
+  
+} catch (error) {
+  console.error('❌ Failed to connect to MongoDB:', error.message);
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
