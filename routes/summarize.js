@@ -1,6 +1,6 @@
 const express = require('express');
 const Groq = require('groq-sdk');
-const Summary = require('../models/Summary');
+const Summary = require('../models/summary');
 const router = express.Router();
 
 const groq = new Groq({

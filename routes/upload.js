@@ -3,7 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const Groq = require('groq-sdk');
-const Summary = require('../models/Summary');
+const Summary = require('../models/summary');
 const router = express.Router();
 
 // Configure multer for file uploads
