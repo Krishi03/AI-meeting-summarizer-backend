@@ -60,16 +60,10 @@ if (process.env.MONGODB_URI) {
 
 try {
   mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    // Add TLS/SSL options to fix compatibility issues
-    ssl: true,
-    sslValidate: true,
-    // Force TLS 1.2 for better compatibility
-    tls: true,
-    tlsAllowInvalidCertificates: false,
-    tlsAllowInvalidHostnames: false,
-    // Connection timeout and retry options
+    // Modern MongoDB connection options
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    maxIdleTimeMS: 30000,
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 45000,
     connectTimeoutMS: 30000,
@@ -77,12 +71,11 @@ try {
     retryWrites: true,
     retryReads: true,
     // Buffer settings
-    bufferMaxEntries: 0,
     bufferCommands: false,
-    // Additional options for Atlas
-    maxPoolSize: 10,
-    minPoolSize: 1,
-    maxIdleTimeMS: 30000,
+    // TLS/SSL options for Atlas
+    tls: true,
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
   });
   
   mongoose.connection.on('connected', () => {
