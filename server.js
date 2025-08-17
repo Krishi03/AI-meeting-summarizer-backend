@@ -20,6 +20,7 @@ const corsOptions = {
       'http://localhost:8080',  // Alternative dev port
       'https://ai-meeting-summarizer-frontend-olive.vercel.app', // Old production frontend
       'https://ai-meeting-summarizer-frontend-4km58v4ja-krishis-projects.vercel.app', // New production frontend
+      'https://ai-meeting-summarizer-frontend-git-main-krishis-projects.vercel.app/',
       process.env.FRONTEND_URL   // Additional production frontend URL
     ].filter(Boolean); // Remove undefined values
     
