@@ -8,30 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration for development and production
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Allow localhost ports for development
-    const allowedOrigins = [
-      'http://localhost:3000',  // React default
-      'http://localhost:5173',  // Vite default
-      'http://localhost:4173',  // Vite preview
-      'http://localhost:8080',  // Alternative dev port
-      'https://ai-meeting-summarizer-frontend-olive.vercel.app', // Old production frontend
-      'https://ai-meeting-summarizer-frontend-4km58v4ja-krishis-projects.vercel.app', // New production frontend
-      'https://ai-meeting-summarizer-frontend-git-main-krishis-projects.vercel.app/',
-      process.env.FRONTEND_URL   // Additional production frontend URL
-    ].filter(Boolean); // Remove undefined values
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log('🚫 CORS blocked origin:', origin);
-      console.log('💡 Allowed origins:', allowedOrigins);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins
   credentials: true,
   optionsSuccessStatus: 200
 };
